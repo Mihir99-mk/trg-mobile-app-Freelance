@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "TRG Packagings",
+    "slug": "trg-packagings",
+    "version": "1.0.0",
+    "scheme": "trg-packagings",
+    "orientation": "portrait",
+    "icon": "./assets/images/trg-logo-main.png",
+    "userInterfaceStyle": "light",
+    "platforms": [
+      "android",
+      "ios",
+      "web"
+    ],
+    "splash": {
+      "image": "./assets/images/trg-bg.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/trg-bg.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.kartik_gupta9.myapp"
+    },
+    "web": {
+      "favicon": "./assets/images/trg-logo.png",
+      "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "688ffa4f-382a-4e47-a2e1-0d3c562fddd7"
+      }
+    }
+  }
+}
