@@ -19,14 +19,22 @@ const DatePicker = (props: { defaultDate: Date; onDateChange: any }) => {
 
   const onChange = (e: DateTimePickerEvent, selectedDate:  Date|undefined) => {
     if (selectedDate) {
-    setDate(new Date(selectedDate))
+      onDateChange(new Date(selectedDate))
+      setDate(new Date(selectedDate))
+    }else{
+      onDateChange(new Date(Date.now()))
+      setDate(new Date(Date.now()))
     }
   }
 
   const onAndroidChange = (e: DateTimePickerEvent, selectedDate:  Date|undefined) => {
     setShow(false)
     if (selectedDate) {
+      onDateChange(new Date(selectedDate))
       setDate(new Date(selectedDate))
+    }else{
+      onDateChange(new Date(Date.now()))
+      setDate(new Date(Date.now()))
     }
   }
 
@@ -46,8 +54,8 @@ const DatePicker = (props: { defaultDate: Date; onDateChange: any }) => {
           display={Platform.OS === 'android' ? 'calendar' : 'default'}
           value={new Date(date)}
           mode='date'
-          minimumDate={new Date(1920, 10, 20)}
-          maximumDate={new Date()}
+          minimumDate={new Date(Date.now())}
+          maximumDate={new Date(3030, 12,30)}
           onChange={Platform.OS === 'android' ? onAndroidChange : onChange }
         />
       </>

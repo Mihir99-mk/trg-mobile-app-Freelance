@@ -1,10 +1,38 @@
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 import { Badge, Button, Card, Text } from 'react-native-paper'
+import * as SecureStore from "expo-secure-store"
 
+type Task = {
+    priority: string
+    description: string
+    title: string
+    date : string
+  }
 const index = () => {
+    const [Task, setTask] = useState()
+    
+    const fetchData = async() =>{
+        try {
+            const getTask = await SecureStore.getItemAsync("taskData")
+            if (getTask) {
+                const parsedTaskData = JSON.parse(getTask);
+                setTask(parsedTaskData);
+              }
+        } catch (error) {
+            
+        } 
+    }
+
+    useEffect(() => {
+    fetchData()
+      
+    console.log(Task)
+    }, [])
+    
+
     return (
         <SafeAreaView style={styles.mainContainer}>
 

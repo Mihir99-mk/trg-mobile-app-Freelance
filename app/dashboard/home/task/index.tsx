@@ -1,5 +1,5 @@
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -13,16 +13,52 @@ import { router } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
 import DatePicker from "../../../components/customs/DatePicker";
 
+type Task = {
+  priority: string
+  description: string
+  title: string
+  date : string
+}
+
 const index = () => {
-  const [priority, setPriority] = useState("High");
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const priorityRef = useRef("High");
+  const descriptionRef = useRef<string | null>(null);
+  const titleRef = useRef<string | null>(null);
+  const dateRef = useRef<string | null>(null);
+  const [workList, setWorkList] = useState<Task>();
+
+
+
 
   const saveWork = async () => {
     try {
-      await SecureStore.setItemAsync('title', title);
-      await SecureStore.setItemAsync('description', description);
-      await SecureStore.setItemAsync('priority', priority);
+      const title = titleRef.current;
+      const description = descriptionRef.current;
+      const priority = priorityRef.current
+      const date = dateRef.current
+
+      const extractedDate = date ? new Date(date).toISOString().split("T")[0] : null;
+
+
+      if (!title || !description || !priority || !extractedDate) {
+        console.log("failed")
+        return;
+      }
+
+      const payload = {
+        title,
+        description,
+        priority,
+        date: extractedDate
+      }
+
+
+      const taskData = await SecureStore.setItemAsync("taskData", JSON.stringify(workList))
+      const getTask = await SecureStore.getItemAsync("taskData");
+
+      console.log(getTask)
+
+      
       console.log('Work details saved successfully!');
     } catch (error) {
       console.error('Error saving work details:', error);
@@ -38,21 +74,20 @@ const index = () => {
           </View>
           <View style={styles.card}>
             <View style={styles.cardContent}>
-              <TextInput placeholder={"Title*"} value={title}
-                onChangeText={(text:string)=>setTitle(text)} style={styles.inputStyle} />
+              <TextInput placeholder={"Title*"} 
+                onChangeText={(text:any)=>titleRef.current = text} style={styles.inputStyle} />
               <TextInput
                 placeholder={"Description"}
                 style={styles.inputStyle}
-                value={description}
-                onChangeText={(text:string)=>setDescription(text)}
+                onChangeText={(text:any)=>descriptionRef.current =text}
                 
               />
               <View style={styles.priorityContainer}>
                 <Text style={styles.priorityLabel}>Priority</Text>
                 <Picker
-                  selectedValue={priority}
                   style={styles.priorityPicker}
-                  onValueChange={(itemValue) => setPriority(itemValue)}
+                  selectedValue={priorityRef.current}
+                  onValueChange={(itemValue) => priorityRef.current = itemValue}
                 >
                   <Picker.Item label="High" value="High" />
                   <Picker.Item label="Medium" value="Medium" />
@@ -72,13 +107,8 @@ const index = () => {
                     }
                     style={styles.iconButton}
                   >
-                    <DatePicker defaultDate={new Date(Date.now())} onDateChange={(value: any)=>console.log(value)} />
-                      {/* <MaterialIcons
-                        name="add-circle"
-                        size={42}
-                        color="black"
-                        onPress={()=>console.log("date")}
-                      /> */}
+                    <DatePicker defaultDate={new Date(Date.now())} onDateChange={(value: any)=> dateRef.current = value} />
+                     
                   </TouchableOpacity>
                 </View>
               </View>

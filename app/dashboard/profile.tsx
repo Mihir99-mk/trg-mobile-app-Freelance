@@ -4,6 +4,7 @@ import TabsHeader from '../components/customs/TabsHeader'
 import { Avatar, Card, IconButton, SegmentedButtons } from 'react-native-paper'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import UserStore from '../stores/user.store'
+import { router } from 'expo-router'
 
 const profile = () => {
   const userDetails = UserStore((state: any) => state.userDetails)
@@ -40,7 +41,7 @@ const profile = () => {
           <Ionicons name='document' size={20} />
           <Text>Order History</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuOptions}>
+        <TouchableOpacity style={styles.menuOptions} onPress={()=>router.push("dashboard/home/members")}>
           <Ionicons name='people' size={20} />
           <Text>Manage Teams</Text>
         </TouchableOpacity>
