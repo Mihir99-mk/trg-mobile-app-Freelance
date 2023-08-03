@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
+import * as SecureStore from "expo-secure-store"
 
 const data = [
   { id: "1", label: "Option 1" },
@@ -21,15 +22,36 @@ const Categories = () => {
     label: string;
   }>();
 
+  useEffect(() => {
+    if (data.length > 0) {
+      setSelectedValue(data[0]);
+    }
+    loadSelectedValue();
+  }, []);
+
+
   const handleSelect = (item: any) => {
     setSelectedValue(item);
   };
 
-  const handleSave = () => {
+  const handleSave = async() => {
     if (selectedValue) {
+      await SecureStore.setItemAsync('taskData', JSON.stringify(selectedValue));
+      
       console.log("Saved item:", selectedValue);
     } else {
       console.log("No item selected to save.");
+    }
+  };
+
+  const loadSelectedValue = async () => {
+    try {
+      const value = await SecureStore.getItemAsync("selectedValue");
+      if (value) {
+        setSelectedValue(JSON.parse(value));
+      }
+    } catch (error) {
+      console.log("Error loading selected value:", error);
     }
   };
 
@@ -57,6 +79,7 @@ const Categories = () => {
             data={data}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
+            
             ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
         </View>
